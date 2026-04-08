@@ -142,14 +142,9 @@ async function onRecordingStopped() {
   try {
     const audioBlob = new Blob(chunks, { type: "audio/webm" });
     const result = await classifyAudio(audioBlob);
-    els.resultText.textContent = toResultLabel(result);
-    setState(result === "pending" ? "モデル未設定" : "判定完了");
-    showMessage(
-      result === "pending"
-        ? "モデル未設定のため、判定は準備中です（録音のみ完了）。"
-        : "判定が完了しました。",
-      result === "pending" ? "error" : "success"
-    );
+    els.resultText.textContent = result === "ojisan" ? "おじさん寄り" : "上品寄り";
+    setState("判定完了");
+    showMessage("判定が完了しました。", "success");
 
     const historyItem = {
       id: crypto.randomUUID(),
@@ -186,21 +181,11 @@ async function onRecordingStopped() {
 
 async function classifyAudio(_audioBlob) {
   if (!MODEL_CONFIGURED) {
-    return "pending";
+    throw new Error("model not configured");
   }
 
   // TODO: 実モデル導入後に置き換える
   return "ojisan";
-}
-
-function toResultLabel(result) {
-  if (result === "ojisan") {
-    return "おじさん寄り";
-  }
-  if (result === "johin") {
-    return "上品寄り";
-  }
-  return "準備中（モデル未設定）";
 }
 
 function deleteHistoryItem(id) {
@@ -236,9 +221,9 @@ function renderHistory() {
 
     const meta = document.createElement("p");
     meta.className = "history-meta";
-    meta.textContent = `${formatDate(item.timestamp)} / ${toResultLabel(
-      item.result
-    )} / 音声保存:${item.audioSaved ? "あり" : "なし"}`;
+    meta.textContent = `${formatDate(item.timestamp)} / ${
+      item.result === "ojisan" ? "おじさん寄り" : "上品寄り"
+    } / 音声保存:${item.audioSaved ? "あり" : "なし"}`;
 
     const actions = document.createElement("div");
     actions.className = "history-actions";
