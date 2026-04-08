@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>くしゃみ判別アプリ</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>くしゃみ判別アプリ</h1>
+        <p class="subtitle">録音したくしゃみを「おじさん寄り / 上品寄り」に分類します</p>
+      </header>
+
+      <nav class="tabs" aria-label="画面切り替え">
+        <button id="tab-main" class="tab active" data-target="main-view">メイン</button>
+        <button id="tab-history" class="tab" data-target="history-view">履歴</button>
+      </nav>
+
+      <section id="main-view" class="view active" aria-live="polite">
+        <div class="panel">
+          <h2>状態</h2>
+          <ul class="status-list">
+            <li>モデル状態: <strong id="model-status">確認中...</strong></li>
+            <li>マイク権限: <strong id="mic-permission">未確認</strong></li>
+            <li>アプリ状態: <strong id="app-state">待機中</strong></li>
+          </ul>
+        </div>
+
+        <div class="panel controls">
+          <h2>録音</h2>
+          <div class="button-row">
+            <button id="record-start" type="button">録音開始</button>
+            <button id="record-stop" type="button" disabled>録音停止</button>
+          </div>
+          <p id="recording-indicator" class="recording-indicator hidden">● 録音中...</p>
+          <p id="record-help" class="help-text">録音後に自動で判定します。</p>
+        </div>
+
+        <div class="panel">
+          <h2>判定結果</h2>
+          <p id="result-text" class="result">未判定</p>
+        </div>
+
+        <div class="panel">
+          <h2>設定</h2>
+          <label class="toggle">
+            <input id="save-audio-toggle" type="checkbox" />
+            <span>録音音声を保存する（既定: OFF）</span>
+          </label>
+          <p class="help-text">※保存件数の上限に達した場合は保存に失敗します。</p>
+        </div>
+
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+      </section>
+
+      <section id="history-view" class="view" aria-live="polite">
+        <div class="panel">
+          <h2>判定履歴</h2>
+          <div class="button-row">
+            <button id="delete-all" type="button">履歴を全件削除</button>
+          </div>
+          <ul id="history-list" class="history-list"></ul>
+          <p id="history-empty" class="help-text">履歴はまだありません。</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
