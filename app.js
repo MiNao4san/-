@@ -78,10 +78,10 @@ function syncModelStatus() {
   }
 
   els.modelStatus.textContent = "モデル未設定（準備中）";
-  els.startBtn.disabled = false;
+  els.startBtn.disabled = true;
   els.stopBtn.disabled = true;
   setState("モデル未設定");
-  showMessage("モデル未設定のため、録音はできますが判定は準備中です。", "error");
+  showMessage("現在モデル未設定のため、判定機能は準備中です。", "error");
 }
 
 function checkBrowserSupport() {
@@ -99,6 +99,11 @@ function checkBrowserSupport() {
 }
 
 async function startRecording() {
+  if (!MODEL_CONFIGURED) {
+    showMessage("モデル未設定のため録音を開始できません。", "error");
+    return;
+  }
+
   try {
     mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
     els.micPermission.textContent = "許可";
